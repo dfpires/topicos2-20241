@@ -1,0 +1,34 @@
+<html>
+    <style>
+       .container {
+    display: flex; /* Ativa o modelo de layout flexível */
+}
+
+.sidebar {
+    flex: 1; /* A barra lateral ocupa uma fração flexível do espaço disponível */
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.main-content {
+    flex: 3; /* O conteúdo principal ocupa mais espaço do que a barra lateral */
+    background-color: #e0e0e0;
+    padding: 20px;
+}
+    
+    </style>
+    <body>
+        <div class="container">
+    <div class="sidebar">
+        <!-- Conteúdo da barra lateral -->
+        <h2>Sidebar</h2>
+        <p>Conteúdo da barra lateral aqui...</p>
+    </div>
+    <div class="main-content">
+        <!-- Conteúdo principal -->
+        <h1>Conteúdo Principal</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac libero eget velit fermentum interdum.</p>
+    </div>
+</div>
+    </body>
+</html>
