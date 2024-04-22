@@ -1,3 +1,4 @@
+https://www.enterprisedb.com/downloads/postgres-postgresql-downloads<br/>
 Passo 1: Instalar o GO disponível em https://go.dev/dl/ <br/> 
 Passo 2: Abrir o VSCode <br/>
 Passo 3: Vá em Extensões, digite GO e instale a primeira extensão que aparece (Go Team at Google) <br/>
