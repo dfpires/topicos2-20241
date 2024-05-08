@@ -1,21 +1,55 @@
 package main
 
 import (
+	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/lib/pq"
 )
+
+// Struct para representar um usuário
+type User struct {
+	ID       int
+	Username string
+	Email    string
+}
 
 func main() {
 	// cria um servidor web já com tratamento de rota
 	router := gin.Default()
 	// quem vai responder o endpoint /albums é a função getAlbums
-	router.GET("/albums", getAlbums)
+	router.GET("/users", getAllUsers)
 	router.GET("/albums/:id", getAlbumByID)
 	router.DELETE("/albums/:id", deleteAlbumByID)
 	router.POST("/albums", postAlbums)
 
 	router.Run("localhost:8080")
+}
+
+func getAllUsers(c *gin.Context) {
+	connStr := "user=postgres dbname=golang password=123 host=localhost sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	rows, err := db.Query("SELECT id, username, email FROM users")
+	if err != nil {
+		c.IndentedJSON(http.StatusInternalServerError, err)
+	}
+
+	var users []User
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.ID, &user.Username, &user.Email)
+		if err != nil {
+			c.IndentedJSON(http.StatusInternalServerError, err)
+		}
+		users = append(users, user)
+	}
+	c.IndentedJSON(http.StatusOK, users)
 }
 
 // album represents data about a record album.
@@ -31,13 +65,6 @@ var albums = []album{
 	{ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
 	{ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
 	{ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
-}
-
-// getAlbums responds with the list of all albums as JSON.
-func getAlbums(c *gin.Context) {
-
-	c.IndentedJSON(http.StatusOK, albums)
-
 }
 
 // postAlbums adds an album from JSON received in the request body.
