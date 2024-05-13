@@ -16,6 +16,8 @@ type User struct {
 	Email    string
 }
 
+var connStr = "user=postgres dbname=golang password=123 host=localhost sslmode=disable"
+
 func main() {
 	// cria um servidor web já com tratamento de rota
 	router := gin.Default()
@@ -23,13 +25,12 @@ func main() {
 	router.GET("/users", getAllUsers)
 	router.GET("/albums/:id", getAlbumByID)
 	router.DELETE("/albums/:id", deleteAlbumByID)
-	router.POST("/albums", postAlbums)
+	router.POST("/user", postAlbums)
 
 	router.Run("localhost:8080")
 }
 
 func getAllUsers(c *gin.Context) {
-	connStr := "user=postgres dbname=golang password=123 host=localhost sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
@@ -43,11 +44,12 @@ func getAllUsers(c *gin.Context) {
 	var users []User
 	for rows.Next() {
 		var user User
+		// adiciona no objeto user
 		err := rows.Scan(&user.ID, &user.Username, &user.Email)
 		if err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 		}
-		users = append(users, user)
+		users = append(users, user) // adiciona no vetor users
 	}
 	c.IndentedJSON(http.StatusOK, users)
 }
